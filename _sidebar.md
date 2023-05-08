@@ -1,0 +1,6 @@
+ * [**vcpkg-registry**](/)
+ * [**sese.core**](/)
+ * [**sese.db**](/)
+ * [**sese.plugin**](/)
+ * [**SString**](/project/SString/README.md)
+ * [**SimpleUuid**](/)
