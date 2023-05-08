@@ -1,4 +1,5 @@
- * [**vcpkg-registry**](/)
+ * [**HOME**](/)
+ * [**vcpkg-registry**](/project/vcpkg-registry/README.md)
  * [**sese.core**](/)
  * [**sese.db**](/)
  * [**sese.plugin**](/)

@@ -6,26 +6,6 @@
 
 编辑 vcpkg-configuration.json，向 registries > package 中添加 sstring
 
-```json
-{
-  "default-registry": {
-    "kind": "git",
-    "repository": "https://github.com/microsoft/vcpkg.git",
-    "baseline": "${BASELINE}"
-  },
-  "registries": [
-    {
-      "kind": "git",
-      "repository": "https://github.com/libsese/vcpkg-registry.git",
-      "baseline": "${BASELINE}",
-      "packages": [
-        "sstring"
-      ]
-    }
-  ]
-}
-```
-
 编辑 vcpkg.json 向项目中添加依赖
 
 ```json
