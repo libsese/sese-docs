@@ -12,13 +12,14 @@
 
 !> 使用 vcpkg 的目的之一就是希望开发者始终使用最新版本的库，下面是各个库所处于的最新版本
 
-| 名称          | 链接                             | vcpkg 包名    | 版本    |
-|-------------|--------------------------------|-------------|-------|
-| sese.core   | github.com/libsese/sese.core   | sese        | x     |
-| sese.db     | github.com/libsese/sese.db     | sese-db     | x     |
-| sese.plugin | github.com/libsese/sese.plugin | sese-plugin | 0.2.1 |
-| SString     | github.com/libsese/SString     | sstring     | 0.1.5 |
-| SimpleUuid  | github.com/libsese/SimpleUuid  | simpleuuid  | 0.1.4 |
+| 名称          | 链接                              | vcpkg 包名    | 版本    |
+|-------------|---------------------------------|-------------|-------|
+| sese.core   | github.com/libsese/sese.core    | sese        | x     |
+| sese.db     | github.com/libsese/sese.db      | sese-db     | x     |
+| sese.event  | github.com/libsese/sese.event   | sese-event  | 0.1.0 |
+| sese.plugin | github.com/libsese/sese.plugin  | sese-plugin | 0.2.1 |
+| SString     | github.com/libsese/SString      | sstring     | 0.1.5 |
+| SimpleUuid  | github.com/libsese/SimpleUuid   | simpleuuid  | 0.1.4 |
 
 > x: 表示该库未正式发布
 
