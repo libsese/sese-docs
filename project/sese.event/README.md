@@ -132,7 +132,7 @@ target_link_libraries(${TARGET} PRIVATE SString::SString)
 
 底层为 kqueue，支持最大事件监听数 64。（含监听套接字）
 
-!> kqueue 的事件是不能组合的，也就以为着同一个套接字组成读写事件需要占用两个事件，所以不推荐监听的套接字数量超过30个。
+!> kqueue 的事件是不能组合的，也就意味着同一个套接字组成读写事件需要占用两个事件，所以不推荐监听的套接字数量超过30个。
 
 ## 示例 - echo 服务器
 
@@ -249,4 +249,12 @@ int main() {
 
 > 效果
 
-![](./meta/echo_server.gif)
+![echo_server](./meta/echo_server.gif)
+
+## 开发和调试
+
+开发和调试该项目需要启用额外选项
+
+> -DSESE_EVENT_BUILD_TEST:BOOL=TRUE
+>
+> -DVCPKG_MANIFEST_FEATURES:STRING=tests
