@@ -10,13 +10,13 @@
 
 ## 浏览库
 
-### [sese.core](./project/sese.core/README.md)
+### [sese-core](./project/sese-core/README.md)
 
 便捷轻量的跨平台C++开发框架
 
 ---
 
-### [sese.db](./project/sese.db/README.md)
+### [sese-db](./project/sese-db/README.md)
 
 跨平台的数据库统一接口
 
@@ -30,7 +30,7 @@
 
 ---
 
-### [sese.event](./project/sese.event/README.md)
+### [sese-event](./project/sese-event/README.md)
 
 跨平台的网络事件库
 
@@ -38,7 +38,7 @@
 
 ---
 
-### [sese.plugin](./project/sese.plugin/README.md)
+### [sese-plugin](./project/sese-plugin/README.md)
 
 本机二进制插件库，需要配合 sese.core 使用。
 
@@ -58,14 +58,14 @@ UTF-8 字符串处理库。
 
 !> 使用 vcpkg 的目的之一就是希望开发者始终使用最新版本的库，下面是各个库所处于的最新版本
 
-| 名称          | 链接                              | vcpkg 包名    | 版本    |
-|-------------|---------------------------------|-------------|-------|
-| sese.core   | github.com/libsese/sese.core    | sese        | x     |
-| sese.db     | github.com/libsese/sese.db      | sese-db     | x     |
-| sese.event  | github.com/libsese/sese.event   | sese-event  | 0.1.0 |
-| sese.plugin | github.com/libsese/sese.plugin  | sese-plugin | 0.2.1 |
-| SString     | github.com/libsese/SString      | sstring     | 0.1.5 |
-| SimpleUuid  | github.com/libsese/SimpleUuid   | simpleuuid  | 0.1.4 |
+| 名称          | 链接                             | vcpkg 包名    | 版本    |
+|-------------|--------------------------------|-------------|-------|
+| sese-core   | github.com/libsese/sese-core   | sese        | x     |
+| sese-db     | github.com/libsese/sese-db     | sese-db     | x     |
+| sese-event  | github.com/libsese/sese-event  | sese-event  | 0.1.0 |
+| sese-plugin | github.com/libsese/sese-plugin | sese-plugin | 0.2.1 |
+| SString     | github.com/libsese/SString     | sstring     | 0.1.5 |
+| SimpleUuid  | github.com/libsese/SimpleUuid  | simpleuuid  | 0.1.4 |
 
 > x: 表示该库未正式发布
 

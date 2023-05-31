@@ -1,4 +1,4 @@
-# sese.plugin
+# sese-plugin
 
 > sese.plugin 提供可供本机使用的插件接口
 

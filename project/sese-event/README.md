@@ -1,4 +1,4 @@
-# sese.event
+# sese-event
 
 > 跨平台网络事件库
 
