@@ -62,7 +62,7 @@ UTF-8 字符串处理库。
 |-------------|--------------------------------|-------------|-------|
 | sese-core   | github.com/libsese/sese-core   | sese        | 0.6.3 |
 | sese-db     | github.com/libsese/sese-db     | sese-db     | x     |
-| sese-event  | github.com/libsese/sese-event  | sese-event  | 0.1.0 |
+| sese-event  | github.com/libsese/sese-event  | sese-event  | 0.1.1 |
 | sese-plugin | github.com/libsese/sese-plugin | sese-plugin | 0.2.1 |
 | SString     | github.com/libsese/SString     | sstring     | 0.1.5 |
 | SimpleUuid  | github.com/libsese/SimpleUuid  | simpleuuid  | 0.1.4 |
