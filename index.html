@@ -17,10 +17,21 @@
       repo: 'https://github.com/libsese/sese.docs/',
       loadSidebar: true,
       loadNavbar: true,
-      subMaxLevel: 2,
+      subMaxLevel: 3,
       coverpage: true,
       onlyCover: false,
-      mergeNavbar: true
+      mergeNavbar: true,
+      plugins: [
+              titlePlugin({suffix: 'libsese: '})
+      ]
+    }
+
+    function titlePlugin(config) {
+      return (hook, vm) => {
+        hook.doneEach((content) => {
+          document.title = config.suffix + document.title;
+        })
+      }
     }
   </script>
   <!-- Docsify v4 -->

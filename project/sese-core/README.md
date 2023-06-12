@@ -155,3 +155,115 @@ _20230612 115912222.log_
 2023-06-12T11:59:12.217Z W MyTag Main:2940> NUMBER: 1024
 2023-06-12T11:59:12.222Z E MyTag Main:2940> BOOL: true
 ```
+
+## 线程模块（thread）
+
+### 启动一个线程
+
+日志器能够获取到线程模块所属线程的名称，主线程默认为 Main。
+对于直接使用 std::thread 未进行处理的情况下会导致获取名称依然为 Main。
+
+_thread-example-1.cpp_
+
+```clike
+#include "sese/thread/Thread.h"
+#include "sese/record/LogHelper.h"
+
+void ThreadProc() {
+    sese::record::LogHelper::d("Hello World");
+}
+
+int main() {
+    auto th1 = sese::Thread(ThreadProc, "MyThread");
+    th1.start();
+    th1.join();
+
+    auto th2 = std::thread(ThreadProc);
+    th2.join();
+
+    ThreadProc();
+
+    return 0;
+}
+```
+
+```
+2023-06-12T13:35:37.650Z D DEF MyThread:14096> Hello World
+2023-06-12T13:35:37.685Z D DEF Main:15840> Hello World
+2023-06-12T13:35:37.689Z D DEF Main:16768> Hello World
+```
+
+### 启动一个带有参数的线程
+
+_thread-example-2.cpp_
+
+```clike
+#include "sese/thread/Thread.h"
+#include "sese/record/LogHelper.h"
+
+#include <functional>
+
+void ThreadProc(const char *str) {
+    sese::record::LogHelper::d("STRING: %s", str);
+}
+
+int main() {
+    auto th1 = sese::Thread(std::bind(&ThreadProc, "Hello World"), "MyThread1");
+    th1.start();
+    th1.join();
+
+    auto th2 = sese::Thread([]() -> void { ThreadProc("Hello World"); }, "MyThread2");
+    th2.start();
+    th2.join();
+
+    return 0;
+}
+```
+
+如上所示，可以使用 std::bind 或 lambda 表达式传递参数。（方式不唯一，仅供演示）
+
+```
+2023-06-12T13:42:43.916Z D DEF MyThread1:15656> STRING: Hello World
+2023-06-12T13:42:43.947Z D DEF MyThread2:6728> STRING: Hello World
+```
+
+### 使用线程池
+
+_thread-example-3.cpp_
+
+```clike
+#include "sese/thread/ThreadPool.h"
+#include "sese/record/LogHelper.h"
+
+#include <functional>
+#include <chrono>
+
+using namespace std::chrono_literals;
+
+void ThreadProc(const char *str) {
+    sese::record::LogHelper::d("STRING: %s", str);
+}
+
+int main() {
+    auto pool = sese::ThreadPool("MyThreadPool", 4);
+    pool.postTask(std::bind(&ThreadProc, "Hello"));
+
+    std::this_thread::sleep_for(100ms);
+    pool.shutdown();
+    return 0;
+}
+```
+
+```
+2023-06-12T14:00:46.557Z D DEF MyThreadPool0:21436> STRING: Hello
+```
+
+线程池中线程的名称取决于线程池的名称，同时会添加数字后缀
+
+## 开发和调试
+
+开发和调试该项目需要启用额外选项
+
+> -DSESE_BUILD_TEST:BOOL=TRUE
+>
+> -DVCPKG_MANIFEST_FEATURES:STRING=tests
