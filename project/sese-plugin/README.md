@@ -1,6 +1,6 @@
 # sese-plugin
 
-> sese.plugin 提供可供本机使用的插件接口
+> sese-plugin 提供可供本机使用的插件接口
 
 ## 开始
 
@@ -67,4 +67,4 @@ DEFINE_CLASS_FACTORY(
 
 ## 示例 - 加载插件
 
-> 加载模块相关实例请参考 sese.core 文档
+> 加载模块相关实例请参考 sese-core 文档

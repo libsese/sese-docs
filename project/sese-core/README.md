@@ -110,7 +110,7 @@ int main() {
 
 _record-example-3.cpp_
 
-!> 不建议使用 BlockAppender，在 block size 较小时存在丢失日志的 bug，问题存在于 0.6.3 版本。
+!> ~~BlockAppender 在 block size 较小时存在丢失日志的 bug，问题存在于 0.6.3 版本。~~（已修复，block size 最小值限制为 1024 bytes。）
 
 ```clike
 #include "sese/record/LogHelper.h"
@@ -161,7 +161,8 @@ _20230612 115912222.log_
 ### 启动一个线程
 
 日志器能够获取到线程模块所属线程的名称，主线程默认为 Main。
-对于直接使用 std::thread 未进行处理的情况下会导致获取名称依然为 Main。
+~~对于直接使用 std::thread 未进行处理的情况下会导致获取名称依然为 Main。~~
+在 0.6.3 之后的版本已修复，未命名线程和非 sese::Thread 创建的线程均定义为 UNKNOWN_THREAD。
 
 _thread-example-1.cpp_
 
@@ -189,7 +190,7 @@ int main() {
 
 ```
 2023-06-12T13:35:37.650Z D DEF MyThread:14096> Hello World
-2023-06-12T13:35:37.685Z D DEF Main:15840> Hello World
+2023-06-12T13:35:37.685Z D DEF UNKNOWN_THREAD:15840> Hello World
 2023-06-12T13:35:37.689Z D DEF Main:16768> Hello World
 ```
 
@@ -259,6 +260,143 @@ int main() {
 ```
 
 线程池中线程的名称取决于线程池的名称，同时会添加数字后缀
+
+## 并发数据结构（concurrent）
+
+此模块已经基本弃用，代码均已标记弃用，请不要继续使用此模块。
+模块中数据结构存在一些难以复现的 bug，行为不可预测，如果执意要使用，希望你明白你在做什么。
+实现真正的无锁并发的核心思想是尽量减少资源的竞争，而不是不经思考直接使用无锁数据结构。
+
+## 配置模块（config）
+
+> 此模块包含 json、xml 等文件格式的序列化和反序列化，并不是真正意义上的用于“配置”的模块。
+
+### 从流中读取 json 流
+
+_json-example-1.cpp_
+
+```clike
+#include "sese/config/json/JsonUtil.h"
+#include "sese/util/InputBufferWrapper.h"
+#include "sese/record/LogHelper.h"
+
+using namespace sese::json;
+
+int main() {
+    const char content[]{
+            "{"
+            "   \"name\": \"example\","
+            "   \"id\": 114514"
+            "}"
+    };
+    auto input = std::make_shared<sese::InputBufferWrapper>(content, sizeof(content));
+
+    auto object = JsonUtil::deserialize(input, 3);
+    auto nameObject = object->getDataAs<BasicData>("name");
+    auto idObject = object->getDataAs<BasicData>("id");
+
+    sese::record::LogHelper::i(
+            "name: %s, id %lld",
+            nameObject->getDataAs<std::string>("undef").c_str(),
+            idObject->getDataAs<int64_t>(0)
+    );
+
+    return 0;
+}
+```
+
+直接和 JsonObject 打交道或许有些麻烦，可以尝试用位于 rpc 组件下的宏快速操作。
+
+```clike
+#include "sese/config/json/JsonUtil.h"
+#include "sese/util/InputBufferWrapper.h"
+#include "sese/record/LogHelper.h"
+#include "sese/net/rpc/Marco.h"
+
+using namespace sese::json;
+
+int main() {
+    const char content[]{
+            "{"
+            "   \"name\": \"example\","
+            "   \"id\": 114514"
+            "}"
+    };
+    auto input = std::make_shared<sese::InputBufferWrapper>(content, sizeof(content));
+    auto object = JsonUtil::deserialize(input, 3);
+
+    GetString(name, object, "name", "undef");
+    GetInteger(id, object, "id", 0);
+
+    sese::record::LogHelper::i(
+            "name: %s, id %lld",
+            name.c_str(),
+            id
+    );
+
+    return 0;
+}
+```
+
+结果是一样的：
+
+```
+```
+
+### 将 json 数据写入流中
+
+```clike
+#include "sese/config/json/JsonUtil.h"
+#include "sese/util/ConsoleOutputStream.h"
+
+using namespace sese::json;
+
+int main() {
+    auto object = std::make_shared<sese::json::ObjectData>();
+
+    auto nameObject = std::make_shared<BasicData>();
+    nameObject->setDataAs<std::string>("example");
+
+    auto idObject = std::make_shared<BasicData>();
+    idObject->setDataAs<int64_t>(1919810);
+
+    object->set("name", nameObject);
+    object->set("id", idObject);
+
+    auto output = std::make_shared<sese::ConsoleOutputStream>();
+    JsonUtil::serialize(object, output);
+
+    return 0;
+}
+```
+
+此实例同样可以使用宏快速完成。
+
+```clike
+#include "sese/config/json/JsonUtil.h"
+#include "sese/net/rpc/Marco.h"
+#include "sese/util/ConsoleOutputStream.h"
+
+using namespace sese::json;
+
+int main() {
+    auto object = std::make_shared<sese::json::ObjectData>();
+
+    SetString(object, "name", "example");
+    SetInteger(object, "id", 1919810);
+
+    auto output = std::make_shared<sese::ConsoleOutputStream>();
+    JsonUtil::serialize(object, output);
+
+    return 0;
+}
+```
+
+结果也是一样的：
+
+```json
+{"id":1919810,"name":"example"}
+```
 
 ## 开发和调试
 

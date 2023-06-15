@@ -40,7 +40,7 @@
 
 ### [sese-plugin](./project/sese-plugin/README.md)
 
-本机二进制插件库，需要配合 sese.core 使用。
+本机二进制插件库，需要配合 sese-core 使用。
 
 ---
 
