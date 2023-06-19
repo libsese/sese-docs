@@ -399,6 +399,133 @@ int main() {
 {"id":1919810,"name":"example"}
 ```
 
+### 从流中读取 XML
+
+_xml-example-1.cpp_
+
+```clike
+#include "sese/config/xml/XmlUtil.h"
+#include "sese/record/LogHelper.h"
+#include "sese/util/InputBufferWrapper.h"
+
+int main() {
+    const char xml[]{
+            "<root>\n"
+            "    <person>\n"
+            "        <name type=\"string\">foo</name>\n"
+            "        <id type=\"integer\">10001</id>\n"
+            "    </person>\n"
+            "</root>"
+    };
+    auto input = std::make_shared<sese::InputBufferWrapper>(xml, sizeof(xml));
+
+    auto object = sese::xml::XmlUtil::deserialize(input, 3);
+    auto person = object->getElements()[0];
+    auto name = person->getElements()[0]->getValue();
+    auto nameType = person->getElements()[0]->getAttribute("type", "undef");
+    auto id = person->getElements()[1]->getValue();
+    auto idType = person->getElements()[1]->getAttribute("type", "undef");
+
+    sese::record::LogHelper::i("value: %s, type: %s", name.c_str(), nameType.c_str());
+    sese::record::LogHelper::i("value: %s, type: %s", id.c_str(), idType.c_str());
+
+    return 0;
+}
+```
+
+```
+2023-06-19T16:23:55.725Z I DEF Main:11572> value: foo, type: string
+2023-06-19T16:23:55.741Z I DEF Main:11572> value: 10001, type: integer
+```
+
+### 将 XML 数据写入流中
+
+_xml-example-2.cpp_
+
+```clike
+#include "sese/config/xml/XmlUtil.h"
+#include "sese/util/ConsoleOutputStream.h"
+
+using namespace sese::xml;
+
+int main() {
+    auto object = std::make_shared<Element>("config");
+
+    auto profile = std::make_shared<Element>("profile");
+    object->addElement(profile);
+
+    auto address = std::make_shared<Element>("address");
+    address->setAttribute("type", "ipv4");
+    address->setValue("192.168.3.1");
+    profile->addElement(address);
+
+    auto port = std::make_shared<Element>("port");
+    port->setValue("443");
+    profile->addElement(port);
+
+    auto output = std::make_shared<sese::ConsoleOutputStream>();
+    XmlUtil::serialize(object, output);
+
+    return 0;
+}
+```
+
+```
+<config><profile><address type="ipv4">192.168.3.1</address><port>443</port></profile></config>
+```
+
+## 转换模块（convert）
+
+> 此模块负责一些简单的字符串或字节串类的转换
+
+### BASE64 转换
+
+> Base64Converter 在进行编码时，可以手动选择所需码表，可选的有 CodePage::BASE64，CodePage::BASE62，默认则为前者
+
+_convert-example-1.cpp_
+
+```clike
+#include "sese/convert/Base64Converter.h"
+#include "sese/util/ConsoleOutputStream.h"
+#include "sese/util/InputBufferWrapper.h"
+
+int main() {
+    auto input = sese::InputBufferWrapper("Hello", 5);
+    auto console = sese::ConsoleOutputStream();
+    sese::Base64Converter::encode(&input, &console);
+    return 0;
+}
+```
+
+编码的结果如下
+
+```
+SGVsbG8=
+```
+
+> 解码时则无需指定特定的码表
+
+_convert-example-2.cpp_
+
+```clike
+#include "sese/convert/Base64Converter.h"
+#include "sese/util/ConsoleOutputStream.h"
+#include "sese/util/InputBufferWrapper.h"
+
+int main() {
+    auto input = sese::InputBufferWrapper("SGVsbG8=", 8);
+    auto console = sese::ConsoleOutputStream();
+    sese::Base64Converter::decode(&input, &console);
+    return 0;
+}
+```
+
+解码的结果如下
+
+```
+Hello
+```
+
 ## 开发和调试
 
 开发和调试该项目需要启用额外选项
