@@ -62,10 +62,10 @@ int main() {
 ```
 
 ```
-2023-06-12T11:30:47.978Z D DEF Main:18140> Hello World
-2023-06-12T11:30:47.984Z I DEF Main:18140> STRING: Hello World
-2023-06-12T11:30:47.989Z W DEF Main:18140> NUMBER: 1024
-2023-06-12T11:30:47.993Z E DEF Main:18140> BOOL: true
+2023-08-03T15:09:00.715Z D LogHelper.cpp:12 Main:13920> Hello World
+2023-08-03T15:09:00.715Z I LogHelper.cpp:19 Main:13920> STRING: Hello World
+2023-08-03T15:09:00.715Z W LogHelper.cpp:26 Main:13920> NUMBER: 1024
+2023-08-03T15:09:00.715Z E LogHelper.cpp:33 Main:13920> BOOL: true
 ```
 
 - d、i、w、e 分别代表 debug、info、warn、error 四个级别
@@ -84,7 +84,7 @@ _record-example-2.cpp_
 const char str[] = "Hello World";
 
 int main() {
-    sese::record::LogHelper logHelper("MyTag");
+    sese::record::LogHelper logHelper;
     logHelper.debug("Hello World");
     logHelper.info("STRING: %s", str);
     logHelper.warn("NUMBER: %d", 1024);
@@ -94,13 +94,39 @@ int main() {
 ```
 
 ```
-2023-06-12T11:38:26.054Z D MyTag Main:21172> Hello World
-2023-06-12T11:38:26.063Z I MyTag Main:21172> STRING: Hello World
-2023-06-12T11:38:26.068Z W MyTag Main:21172> NUMBER: 1024
-2023-06-12T11:38:26.072Z E MyTag Main:21172> BOOL: true
+2023-08-03T15:07:57.235Z D LogHelper.cpp:58 Main:6816> Hello World
+2023-08-03T15:07:57.235Z I LogHelper.cpp:65 Main:6816> STRING: Hello World
+2023-08-03T15:07:57.235Z W LogHelper.cpp:72 Main:6816> NUMBER: 1024
+2023-08-03T15:07:57.235Z E LogHelper.cpp:79 Main:6816> BOOL: true
 ```
 
 在需要频繁使用日志器时，使用动态方法会更加具有效率
+
+### 使用宏
+
+（推荐）原本的宏在不那么久的版本由于设计不合理本身是被移除的，但在<kbd>0.7.6</kbd>版本开始重新可用，这也是我们推荐你使用的方式。
+
+_record-example-4.cpp_
+
+```clike
+#include "sese/record/Marco.h"
+
+int main () {
+    SESE_DEBUG("Hello World");
+    SESE_INFO("STRING: %s", "Hello");
+    SESE_WARN("NUMBER: %d", 1024);
+    SESE_ERROR("BOOL: %s", true ? "true" : "false");
+}
+```
+
+根据日志输出，我们可以快速的定位到日志调用的位置。
+
+```
+2023-08-03T15:06:54.545Z D record-example-4.cpp:4 Main:14108> Hello World
+2023-08-03T15:06:54.545Z I record-example-4.cpp:5 Main:14108> STRING: Hello
+2023-08-03T15:06:54.545Z W record-example-4.cpp:6 Main:14108> NUMBER: 1024
+2023-08-03T15:06:54.546Z E record-example-4.cpp:7 Main:14108> BOOL: true
+```
 
 ### 异步日志器
 
@@ -111,6 +137,8 @@ int main() {
 _record-example-3.cpp_
 
 !> ~~BlockAppender 在 block size 较小时存在丢失日志的 bug，问题存在于 0.6.3 版本。~~（已修复，block size 最小值限制为 1024 bytes。）
+
+**此处仅作演示，已经不再推荐使用 BlockAppender。**
 
 ```clike
 #include "sese/record/LogHelper.h"
@@ -124,7 +152,7 @@ int main() {
     auto appender = std::make_shared<sese::record::BlockAppender>(128);
     pLogger->addAppender(appender);
 
-    sese::record::LogHelper logHelper("MyTag");
+    sese::record::LogHelper logHelper;
     logHelper.debug("Hello World");
     logHelper.info("STRING: %s", str);
     logHelper.warn("NUMBER: %d", 1024);
@@ -134,10 +162,10 @@ int main() {
 ```
 
 ```
-2023-06-12T11:59:12.208Z D MyTag Main:2940> Hello World
-2023-06-12T11:59:12.213Z I MyTag Main:2940> STRING: Hello World
-2023-06-12T11:59:12.217Z W MyTag Main:2940> NUMBER: 1024
-2023-06-12T11:59:12.222Z E MyTag Main:2940> BOOL: true
+2023-08-03T15:09:30.723Z D LogHelper.cpp:58 Main:7336> Hello World
+2023-08-03T15:09:30.723Z I LogHelper.cpp:65 Main:7336> STRING: Hello World
+2023-08-03T15:09:30.724Z W LogHelper.cpp:72 Main:7336> NUMBER: 1024
+2023-08-03T15:09:30.724Z E LogHelper.cpp:79 Main:7336> BOOL: true
 ```
 
 此时产生两个以时间戳命名的文件
@@ -145,15 +173,15 @@ int main() {
 _20230612 115912207.log_
 
 ```
-2023-06-12T11:59:12.208Z D MyTag Main:2940> Hello World
-2023-06-12T11:59:12.213Z I MyTag Main:2940> STRING: Hello World
+2023-08-03T15:09:30.723Z D LogHelper.cpp:58 Main:7336> Hello World
+2023-08-03T15:09:30.723Z I LogHelper.cpp:65 Main:7336> STRING: Hello World
 ```
 
 _20230612 115912222.log_
 
 ```
-2023-06-12T11:59:12.217Z W MyTag Main:2940> NUMBER: 1024
-2023-06-12T11:59:12.222Z E MyTag Main:2940> BOOL: true
+2023-08-03T15:09:30.724Z W LogHelper.cpp:72 Main:7336> NUMBER: 1024
+2023-08-03T15:09:30.724Z E LogHelper.cpp:79 Main:7336> BOOL: true
 ```
 
 ## 线程模块（thread）
@@ -305,13 +333,13 @@ int main() {
 }
 ```
 
-直接和 JsonObject 打交道或许有些麻烦，可以尝试用位于 rpc 组件下的宏快速操作。
+直接和 JsonObject 打交道或许有些麻烦，可以尝试用位于 Marco.h 下的宏快速操作。
 
 ```clike
 #include "sese/config/json/JsonUtil.h"
+#include "sese/config/json/Marco.h"
 #include "sese/util/InputBufferWrapper.h"
 #include "sese/record/LogHelper.h"
-#include "sese/net/rpc/Marco.h"
 
 using namespace sese::json;
 
@@ -325,8 +353,8 @@ int main() {
     auto input = std::make_shared<sese::InputBufferWrapper>(content, sizeof(content));
     auto object = JsonUtil::deserialize(input, 3);
 
-    GetString(name, object, "name", "undef");
-    GetInteger(id, object, "id", 0);
+    SESE_JSON_GET_STRING(name, object, "name", "undef");
+    SESE_JSON_GET_INTEGER(id, object, "id", 0);
 
     sese::record::LogHelper::i(
             "name: %s, id %lld",
@@ -375,7 +403,7 @@ int main() {
 
 ```clike
 #include "sese/config/json/JsonUtil.h"
-#include "sese/net/rpc/Marco.h"
+#include "sese/config/json/Marco.h"
 #include "sese/util/ConsoleOutputStream.h"
 
 using namespace sese::json;
@@ -383,8 +411,8 @@ using namespace sese::json;
 int main() {
     auto object = std::make_shared<sese::json::ObjectData>();
 
-    SetString(object, "name", "example");
-    SetInteger(object, "id", 1919810);
+    SESE_JSON_SET_STRING(object, "name", "example");
+    SESE_JSON_SET_INTEGER(object, "id", 1919810);
 
     auto output = std::make_shared<sese::ConsoleOutputStream>();
     JsonUtil::serialize(object, output);
@@ -397,6 +425,68 @@ int main() {
 
 ```json
 {"id":1919810,"name":"example"}
+```
+
+### 从流中读取 Yaml
+
+_yaml-example-1.cpp_
+
+```clike
+#include <sese/config/yaml/YamlUtil.h>
+#include <sese/config/yaml/Marco.h>
+#include <sese/util/InputBufferWrapper.h>
+#include <sese/record/Marco.h>
+
+int main () {
+    const char *str = "root:\n"
+                      "  string: \"Hello\"\n"
+                      "  int: 90\n"
+                      "  bool: yes";
+    auto input = sese::InputBufferWrapper(str, strlen(str));
+    auto object = std::dynamic_pointer_cast<sese::yaml::ObjectData>(sese::yaml::YamlUtil::deserialize(&input, 3));
+    auto root = std::dynamic_pointer_cast<sese::yaml::ObjectData>(object->get("root"));
+
+    SESE_YAML_GET_STRING(valueStr, root, "string", "undef");
+    SESE_YAML_GET_INTEGER(valueInt, root, "int", 0);
+    SESE_YAML_GET_BOOLEAN(valueBool, root, "bool", false);
+
+    SESE_INFO("str  - %s", valueStr.c_str());
+    SESE_INFO("int  - %d", (int) valueInt);
+    SESE_INFO("bool - %s", valueBool ? "true" : "false");
+}
+```
+
+```
+2023-8-03T15:35:08.113Z I yaml-example-1.cpp:19 Main:10508> str  - Hello
+2023-8-03T15:35:08.114Z I yaml-example-1.cpp:20 Main:10508> int  - 90
+2023-8-03T15:35:08.114Z I yaml-example-1.cpp:21 Main:10508> bool - true
+```
+
+### 将 Yaml 数据写入流中
+
+_yaml-example-2.cpp_
+
+```clike
+#include <sese/config/yaml/YamlUtil.h>
+#include <sese/config/yaml/Marco.h>
+#include <sese/util/ConsoleOutputStream.h>
+
+int main() {
+    auto object = std::make_shared<sese::yaml::ObjectData>();
+
+    SESE_YAML_SET_STRING(object, "STR", "Hello");
+    SESE_YAML_SET_BOOLEAN(object, "BOOL", true);
+    SESE_YAML_SET_DOUBLE(object, "PI", 3.14);
+
+    sese::ConsoleOutputStream output;
+    sese::yaml::YamlUtil::serialize(object, &output);
+}
+```
+
+```
+BOOL: true
+PI: 3.140000
+STR: Hello
 ```
 
 ### 从流中读取 XML

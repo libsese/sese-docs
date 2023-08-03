@@ -249,7 +249,7 @@ int main() {
 
 > 效果
 
-![echo_server](./meta/echo_server.gif)
+![echo_server](img/echo_server.gif)
 
 ## 开发和调试
 
