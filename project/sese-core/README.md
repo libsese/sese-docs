@@ -526,6 +526,39 @@ int main() {
 Hello
 ```
 
+### 百分号编码转换
+
+> 使用百分号编码器编码和解码非 ASCII 字符串
+
+_convert-example-3.cpp_
+
+```clike
+#include <sese/convert/PercentConverter.h>
+#include <sese/util/FixedBuilder.h>
+#include <sese/record/Marco.h>
+
+int main () {
+    const char *string = "你好，2023";
+    auto buffer1 = std::make_shared<sese::FixedBuilder>(128);
+    sese::PercentConverter::encode(string, buffer1);
+    buffer1->write("\0", 1);
+    SESE_INFO("encode %s", buffer1->data());
+
+    auto buffer2 = std::make_shared<sese::FixedBuilder>(128);
+    sese::PercentConverter::decode(buffer1->data(), buffer2);
+    buffer2->write("\0", 1);
+    SESE_INFO("decode %s", buffer2->data());
+    return 0;
+}
+```
+
+运行结果如下
+
+```
+2023-9-01T20:46:18.530Z I convert-example-3.cpp:10 Main:21523> encode %E4%BD%A0%E5%A5%BD%EF%BC%8C%32%30%32%33
+2023-9-01T20:46:18.531Z I convert-example-3.cpp:15 Main:21523> decode 你好，2023
+```
+
 ## 开发和调试
 
 开发和调试该项目需要启用额外选项
