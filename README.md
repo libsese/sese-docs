@@ -12,7 +12,17 @@
 
 ### [sese-core](./project/sese-core/README.md)
 
-便捷轻量的跨平台C++开发框架
+便捷轻量的跨平台C++开发框架核心
+
+提供 Windows\Linux\macOS 的系统 API 封装，包括但不限于：
+
+- 顺序初始化器
+- 常用的配置文件解析
+- 网络
+- TLS
+- 文件
+- 日志
+- 等
 
 ---
 
@@ -58,16 +68,7 @@ UTF-8 字符串处理库。
 
 !> 使用 vcpkg 的目的之一就是希望开发者始终使用最新版本的库，下面是各个库所处于的最新版本
 
-| 名称          | 链接                             | vcpkg 包名    | 版本    |
-|-------------|--------------------------------|-------------|-------|
-| sese-core   | github.com/libsese/sese-core   | sese        | 0.6.3 |
-| sese-db     | github.com/libsese/sese-db     | sese-db     | x     |
-| sese-event  | github.com/libsese/sese-event  | sese-event  | 0.1.1 |
-| sese-plugin | github.com/libsese/sese-plugin | sese-plugin | 0.2.1 |
-| SString     | github.com/libsese/SString     | sstring     | 0.1.5 |
-| SimpleUuid  | github.com/libsese/SimpleUuid  | simpleuuid  | 0.1.4 |
-
-> x: 表示该库未正式发布
+前往 >> [**vcpkg-registry**](https://github.com/libsese/vcpkg-registry/#Packages) <<
 
 ## 关于
 

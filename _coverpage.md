@@ -1,4 +1,4 @@
-![logo](meta/logo.png)
+![logo](img/logo.png)
 
 # libsese 文档
 

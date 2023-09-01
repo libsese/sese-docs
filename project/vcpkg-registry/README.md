@@ -28,7 +28,7 @@ start ${VCPKG_DEST}/bootstrap-vcpkg.bat
 
 最终的 CMake 命令大致如下
 
-```cmake
+```bash
 cmake -B build -S . -DCMAKE_TOOLCHAIN_FILE=${VCPKG_DEST}/scripts/buildsystems/vcpkg.cmake
 ```
 
