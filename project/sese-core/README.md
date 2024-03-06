@@ -6,26 +6,23 @@
 
 本库依赖如下
 
-| 名称            | 地址                                  | 描述           |
-|---------------|-------------------------------------|--------------|
-| googletest    | github.com/google/googletest        | 用于单元测试       |
-| openssl       | github.com/openssl/openssl          | SSL 支持       |
+|      名称       | 地址                                  | 描述           |
+|:-------------:|-------------------------------------|--------------|
+|  googletest   | github.com/google/googletest        | 用于单元测试       |
+|    openssl    | github.com/openssl/openssl          | SSL 支持       |
 | hpack-rfc7541 | github.com/jnferguson/hpack-rfc7541 | HUFFMAN 编码解码 |
-| zlib          | zlib.net                            | 压缩算法         |
-| SimpleUuid    | github.com/libsese/SimpleUuid       | 雪花算法实现       |
-| SString       | github.com/libsese/SString          | UTF-8 字符串处理  |
-| sese-event    | github.com/libsese/sese-event       | 网络事件库        |
-| sese-plugin   | github.com/libsese/sese-plugin      | 本机插件接口       |
+|     zlib      | zlib.net                            | 压缩算法         |
+|     asio      | github.com/chriskohlhoff/asio       | 跨平台网络支持      |
 
 编辑 vcpkg.json 向项目添加依赖
 
 ```json
 {
-  "name": "sese-event-example",
-  "version-string": "0.1.0",
-  "dependencies": [
-    "sese"
-  ]
+    "name": "sese-event-example",
+    "version-string": "0.1.0",
+    "dependencies": [
+        "sese"
+    ]
 }
 ```
 
@@ -136,7 +133,8 @@ int main () {
 
 _record-example-3.cpp_
 
-!> ~~BlockAppender 在 block size 较小时存在丢失日志的 bug，问题存在于 0.6.3 版本。~~（已修复，block size 最小值限制为 1024 bytes。）
+!> ~~BlockAppender 在 block size 较小时存在丢失日志的 bug，问题存在于 0.6.3 版本。~~（已修复，block size 最小值限制为 1024
+bytes。）
 
 **此处仅作演示，已经不再推荐使用 BlockAppender。**
 
@@ -424,7 +422,10 @@ int main() {
 结果也是一样的：
 
 ```json
-{"id":1919810,"name":"example"}
+{
+    "id": 1919810,
+    "name": "example"
+}
 ```
 
 ### 从流中读取 Yaml
