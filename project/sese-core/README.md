@@ -4,15 +4,7 @@
 
 ## 开始
 
-本库依赖如下
-
-|      名称       | 地址                                  | 描述           |
-|:-------------:|-------------------------------------|--------------|
-|  googletest   | github.com/google/googletest        | 用于单元测试       |
-|    openssl    | github.com/openssl/openssl          | SSL 支持       |
-| hpack-rfc7541 | github.com/jnferguson/hpack-rfc7541 | HUFFMAN 编码解码 |
-|     zlib      | zlib.net                            | 压缩算法         |
-|     asio      | github.com/chriskohlhoff/asio       | 跨平台网络支持      |
+本库依赖依赖可移步次[页面](https://github.com/libsese/sese-core?tab=Apache-2.0-1-ov-file)查询
 
 编辑 vcpkg.json 向项目添加依赖
 
@@ -26,17 +18,10 @@
 }
 ```
 
-向 registries -> package 中添加如下库
-
-- simpleuuid
-- sstring
-- sese-event
-- sese-plugin
-- sese
-
 ## 可用 Target
 
 - Sese::Core
+- Sese::Plugin
 
 ## 日志模块（record）
 
@@ -286,6 +271,49 @@ int main() {
 ```
 
 线程池中线程的名称取决于线程池的名称，同时会添加数字后缀
+
+### 使用异步 API
+
+_thread-example-4.cpp_
+
+示例演示了使用独立新建线程的异步方法和使用全局线程池的方法。
+
+```clike
+#include "sese/util/Initializer.h"
+#include "sese/util/Util.h"
+#include "sese/thread/Async.h"
+#include "sese/record/Marco.h"
+
+int main(int argc, char **argv) {
+    sese::initCore(argc, argv);
+
+    SESE_INFO("begin");
+    {
+        auto future = sese::async<std::string>([]() -> std::string {
+            sese::sleep(1s);
+            return "Hello, World";
+        });
+        SESE_INFO("result: %s", future.get().c_str());
+    }
+    {
+        auto future = sese::asyncWithGlobalPool<std::string>([]() -> std::string{
+            sese::sleep(1s);
+            return "Bye";
+        });
+        SESE_INFO("result: %s", future.get().c_str());
+    }
+
+    return 0;
+}
+```
+
+输出示例：
+
+```
+2024-03-31T10:48:01.102Z I thread-example-4.cpp:9 Main:15992> begin
+2024-03-31T10:48:02.108Z I thread-example-4.cpp:15 Main:15992> result: Hello, World
+2024-03-31T10:48:03.121Z I thread-example-4.cpp:22 Main:15992> result: Bye
+```
 
 ## 并发数据结构（concurrent）
 
